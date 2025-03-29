@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "browser-use>=0.1.40",
+    "langchain>=0.3.21",
     "lmnr[all]>=0.4.66",
     "python-dotenv>=1.0.1",
 ]

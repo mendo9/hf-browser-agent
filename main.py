@@ -3,8 +3,11 @@ import os
 
 from browser_use import Agent, Browser
 from dotenv import load_dotenv
-from langchain_anthropic import ChatAnthropic
-from lmnr import Laminar
+
+# from langchain_anthropic import ChatAnthropic
+from langchain_openai import ChatOpenAI
+
+# from lmnr import Laminar
 from playwright.async_api import BrowserContext
 
 # from agent_prompt import task
@@ -20,12 +23,21 @@ sensitive_data = {
 }
 
 # this line auto-instruments Browser Use and any browser you use (local or remote)
-Laminar.initialize(project_api_key=os.getenv("LAMINAR_API_KEY"))
+# Laminar.initialize(project_api_key=os.getenv("LAMINAR_API_KEY"))
 
 
 async def main():
     # Initialize LLM
-    llm = ChatAnthropic(model="claude-3-opus-20240229")
+    # llm = ChatAnthropic(model="claude-3-opus-20240229")
+    # Initialize LLM with locally running model
+    llm = ChatOpenAI(
+        model="gemma-3-4b-it",  # Model name can be anything your server recognizes
+        api_key="test",  # Can be any string when using local servers
+        base_url="http://127.0.0.1:1234/v1",  # Your local server endpoint
+        stream_options={
+            "include_usage": True
+        },  # Include token usage stats in streaming
+    )
 
     # Reuse existing browser
     browser = Browser()
@@ -35,7 +47,8 @@ async def main():
 
         # Create an agent with the login task
         agent = Agent(
-            llm=ChatAnthropic(model="claude-3-opus-20240229"),
+            # llm=ChatAnthropic(model="claude-3-opus-20240229"),
+            llm=llm,
             task=task,
             browser_context=context,  # Use persistent context
             save_conversation_path="logs/conversation",
@@ -57,13 +70,13 @@ async def main():
         history.model_actions()  # All actions with their parameters
 
         # Run again using the same browser context
-        agent = Agent(
-            llm=llm,
-            task=task,
-            browser_context=context,  # Use persistent context
-            save_conversation_path="logs/conversation",
-            sensitive_data=sensitive_data,
-        )
+        # agent = Agent(
+        #     llm=llm,
+        #     task=task,
+        #     browser_context=context,  # Use persistent context
+        #     save_conversation_path="logs/conversation",
+        #     sensitive_data=sensitive_data,
+        # )
 
         # Manually close the browser
     await browser.close()
