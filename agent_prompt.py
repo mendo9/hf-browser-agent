@@ -3,7 +3,7 @@ task = """
 You are an agent tasked with creating a new organization on Hugging Face.
 
 **Initial Setup:**
-0. Ensure you are on the website https://huggingface.co. If not, navigate there first.
+0. Ensure you are on the website https://huggingface.co. If not, navigate there first. Then wait 3 seconds for the page to be properly loaded.
 
 **Step 1: Log In**
    - An account with the provided credentials (hf_username, hf_password) already exists. **Do not** attempt to sign up or create a new account.
